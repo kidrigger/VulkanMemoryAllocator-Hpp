@@ -345,6 +345,12 @@ namespace VMA_HPP_NAMESPACE {
 #endif /*VULKAN_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef VULKAN_HPP_DISABLE_ENHANCED_MODE
+    VULKAN_HPP_NAMESPACE::Result bindBufferMemory( Allocation allocation, VULKAN_HPP_NAMESPACE::DeviceSize allocationLocalOffset, VULKAN_HPP_NAMESPACE::Buffer buffer, const void* pNext ) const;
+#else
+    VULKAN_HPP_NAMESPACE::ResultValueType<void>::type bindBufferMemory( Allocation allocation, VULKAN_HPP_NAMESPACE::DeviceSize allocationLocalOffset, VULKAN_HPP_NAMESPACE::Buffer buffer, const void* pNext ) const;
+#endif /*VULKAN_HPP_DISABLE_ENHANCED_MODE*/
+
+#ifdef VULKAN_HPP_DISABLE_ENHANCED_MODE
     VULKAN_HPP_NAMESPACE::Result bindBufferMemory2( Allocation allocation, VULKAN_HPP_NAMESPACE::DeviceSize allocationLocalOffset, VULKAN_HPP_NAMESPACE::Buffer buffer, const void* pNext ) const;
 #else
     VULKAN_HPP_NAMESPACE::ResultValueType<void>::type bindBufferMemory2( Allocation allocation, VULKAN_HPP_NAMESPACE::DeviceSize allocationLocalOffset, VULKAN_HPP_NAMESPACE::Buffer buffer, const void* pNext ) const;
@@ -354,6 +360,12 @@ namespace VMA_HPP_NAMESPACE {
     VULKAN_HPP_NAMESPACE::Result bindImageMemory( Allocation allocation, VULKAN_HPP_NAMESPACE::Image image ) const;
 #else
     VULKAN_HPP_NAMESPACE::ResultValueType<void>::type bindImageMemory( Allocation allocation, VULKAN_HPP_NAMESPACE::Image image ) const;
+#endif /*VULKAN_HPP_DISABLE_ENHANCED_MODE*/
+
+#ifdef VULKAN_HPP_DISABLE_ENHANCED_MODE
+    VULKAN_HPP_NAMESPACE::Result bindImageMemory( Allocation allocation, VULKAN_HPP_NAMESPACE::DeviceSize allocationLocalOffset, VULKAN_HPP_NAMESPACE::Image image, const void* pNext ) const;
+#else
+    VULKAN_HPP_NAMESPACE::ResultValueType<void>::type bindImageMemory( Allocation allocation, VULKAN_HPP_NAMESPACE::DeviceSize allocationLocalOffset, VULKAN_HPP_NAMESPACE::Image image, const void* pNext ) const;
 #endif /*VULKAN_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef VULKAN_HPP_DISABLE_ENHANCED_MODE
@@ -429,10 +441,13 @@ namespace VMA_HPP_NAMESPACE {
 
     void destroy() const;
 
+    void destroy( VULKAN_HPP_NAMESPACE::Buffer buffer, Allocation allocation ) const;
     void destroyBuffer( VULKAN_HPP_NAMESPACE::Buffer buffer, Allocation allocation ) const;
 
+    void destroy( VULKAN_HPP_NAMESPACE::Image image, Allocation allocation ) const;
     void destroyImage( VULKAN_HPP_NAMESPACE::Image image, Allocation allocation ) const;
 
+    void destroy( Pool pool ) const;
     void destroyPool( Pool pool ) const;
 
     VULKAN_HPP_NAMESPACE::Result findMemoryTypeIndex( uint32_t memoryTypeBits, const AllocationCreateInfo* pAllocationCreateInfo, uint32_t* pMemoryTypeIndex ) const;
@@ -2307,6 +2322,18 @@ namespace VMA_HPP_NAMESPACE {
 #endif /*VULKAN_HPP_DISABLE_ENHANCED_MODE*/
 
 #ifdef VULKAN_HPP_DISABLE_ENHANCED_MODE
+  VULKAN_HPP_INLINE VULKAN_HPP_NAMESPACE::Result Allocator::bindBufferMemory( Allocation allocation, VULKAN_HPP_NAMESPACE::DeviceSize allocationLocalOffset, VULKAN_HPP_NAMESPACE::Buffer buffer, const void* pNext ) const
+  {
+    return this->bindBufferMemory2( allocation, allocationLocalOffset, buffer, pNext );
+  }
+#else
+  VULKAN_HPP_INLINE VULKAN_HPP_NAMESPACE::ResultValueType<void>::type Allocator::bindBufferMemory( Allocation allocation, VULKAN_HPP_NAMESPACE::DeviceSize allocationLocalOffset, VULKAN_HPP_NAMESPACE::Buffer buffer, const void* pNext ) const
+  {
+    return this->bindBufferMemory2( allocation, allocationLocalOffset, buffer, pNext );
+  }
+#endif /*VULKAN_HPP_DISABLE_ENHANCED_MODE*/
+
+#ifdef VULKAN_HPP_DISABLE_ENHANCED_MODE
   VULKAN_HPP_INLINE VULKAN_HPP_NAMESPACE::Result Allocator::bindBufferMemory2( Allocation allocation, VULKAN_HPP_NAMESPACE::DeviceSize allocationLocalOffset, VULKAN_HPP_NAMESPACE::Buffer buffer, const void* pNext ) const
   {
     return static_cast<VULKAN_HPP_NAMESPACE::Result>( ::vmaBindBufferMemory2( m_allocator, static_cast<VmaAllocation>( allocation ), static_cast<VkDeviceSize>( allocationLocalOffset ), static_cast<VkBuffer>( buffer ), pNext ) );
@@ -2329,6 +2356,18 @@ namespace VMA_HPP_NAMESPACE {
   {
     VULKAN_HPP_NAMESPACE::Result result = static_cast<VULKAN_HPP_NAMESPACE::Result>( ::vmaBindImageMemory( m_allocator, static_cast<VmaAllocation>( allocation ), static_cast<VkImage>( image ) ) );
     return createResultValue( result, VMA_HPP_NAMESPACE_STRING"::Allocator::bindImageMemory" );
+  }
+#endif /*VULKAN_HPP_DISABLE_ENHANCED_MODE*/
+
+#ifdef VULKAN_HPP_DISABLE_ENHANCED_MODE
+  VULKAN_HPP_INLINE VULKAN_HPP_NAMESPACE::Result bindImageMemory( Allocation allocation, VULKAN_HPP_NAMESPACE::DeviceSize allocationLocalOffset, VULKAN_HPP_NAMESPACE::Image image, const void* pNext ) const;
+  {
+    return this->bindImageMemory2( allocation, allocationLocalOffset, image, pNext );
+  }
+#else
+  VULKAN_HPP_INLINE VULKAN_HPP_NAMESPACE::ResultValueType<void>::type Allocator::bindImageMemory( Allocation allocation, VULKAN_HPP_NAMESPACE::DeviceSize allocationLocalOffset, VULKAN_HPP_NAMESPACE::Image image, const void* pNext ) const
+  {
+    return this->bindImageMemory2( allocation, allocationLocalOffset, image, pNext );
   }
 #endif /*VULKAN_HPP_DISABLE_ENHANCED_MODE*/
 
@@ -2505,53 +2544,40 @@ namespace VMA_HPP_NAMESPACE {
   }
 #endif /*VULKAN_HPP_DISABLE_ENHANCED_MODE*/
 
-#ifdef VULKAN_HPP_DISABLE_ENHANCED_MODE
   VULKAN_HPP_INLINE void Allocator::destroy() const
   {
     ::vmaDestroyAllocator( m_allocator );
   }
-#else
-  VULKAN_HPP_INLINE void Allocator::destroy() const
-  {
-    ::vmaDestroyAllocator( m_allocator );
-  }
-#endif /*VULKAN_HPP_DISABLE_ENHANCED_MODE*/
 
-#ifdef VULKAN_HPP_DISABLE_ENHANCED_MODE
+  VULKAN_HPP_INLINE void Allocator::destroy( VULKAN_HPP_NAMESPACE::Buffer buffer, Allocation allocation ) const
+  {
+    ::vmaDestroyBuffer( m_allocator, static_cast<VkBuffer>( buffer ), static_cast<VmaAllocation>( allocation ) );
+  }
+
   VULKAN_HPP_INLINE void Allocator::destroyBuffer( VULKAN_HPP_NAMESPACE::Buffer buffer, Allocation allocation ) const
   {
     ::vmaDestroyBuffer( m_allocator, static_cast<VkBuffer>( buffer ), static_cast<VmaAllocation>( allocation ) );
   }
-#else
-  VULKAN_HPP_INLINE void Allocator::destroyBuffer( VULKAN_HPP_NAMESPACE::Buffer buffer, Allocation allocation ) const
-  {
-    ::vmaDestroyBuffer( m_allocator, static_cast<VkBuffer>( buffer ), static_cast<VmaAllocation>( allocation ) );
-  }
-#endif /*VULKAN_HPP_DISABLE_ENHANCED_MODE*/
 
-#ifdef VULKAN_HPP_DISABLE_ENHANCED_MODE
+  VULKAN_HPP_INLINE void Allocator::destroy( VULKAN_HPP_NAMESPACE::Image image, Allocation allocation ) const
+  {
+    ::vmaDestroyImage( m_allocator, static_cast<VkImage>( image ), static_cast<VmaAllocation>( allocation ) );
+  }
+
   VULKAN_HPP_INLINE void Allocator::destroyImage( VULKAN_HPP_NAMESPACE::Image image, Allocation allocation ) const
   {
     ::vmaDestroyImage( m_allocator, static_cast<VkImage>( image ), static_cast<VmaAllocation>( allocation ) );
   }
-#else
-  VULKAN_HPP_INLINE void Allocator::destroyImage( VULKAN_HPP_NAMESPACE::Image image, Allocation allocation ) const
-  {
-    ::vmaDestroyImage( m_allocator, static_cast<VkImage>( image ), static_cast<VmaAllocation>( allocation ) );
-  }
-#endif /*VULKAN_HPP_DISABLE_ENHANCED_MODE*/
 
-#ifdef VULKAN_HPP_DISABLE_ENHANCED_MODE
+  VULKAN_HPP_INLINE void Allocator::destroy( Pool pool ) const
+  {
+    ::vmaDestroyPool( m_allocator, static_cast<VmaPool>( pool ) );
+  }
+
   VULKAN_HPP_INLINE void Allocator::destroyPool( Pool pool ) const
   {
     ::vmaDestroyPool( m_allocator, static_cast<VmaPool>( pool ) );
   }
-#else
-  VULKAN_HPP_INLINE void Allocator::destroyPool( Pool pool ) const
-  {
-    ::vmaDestroyPool( m_allocator, static_cast<VmaPool>( pool ) );
-  }
-#endif /*VULKAN_HPP_DISABLE_ENHANCED_MODE*/
 
   VULKAN_HPP_INLINE VULKAN_HPP_NAMESPACE::Result Allocator::findMemoryTypeIndex( uint32_t memoryTypeBits, const AllocationCreateInfo* pAllocationCreateInfo, uint32_t* pMemoryTypeIndex ) const
   {
